@@ -1,0 +1,3 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { AdminWorkspace } from '@/components/auction/workspaces';
+export const Route=createFileRoute('/admin')({head:()=>({meta:[{"title": "Auction management \u2014 Bidwell"}, {"name": "description", "content": "Manage auctions, bids and marketplace activity."}, {"property": "og:title", "content": "Auction management \u2014 Bidwell"}, {"property": "og:description", "content": "Manage auctions, bids and marketplace activity."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary_large_image"}]}),component:AdminWorkspace});

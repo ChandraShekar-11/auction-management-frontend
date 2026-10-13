@@ -1,0 +1,89 @@
+CREATE TABLE IF NOT EXISTS `user` (
+  id VARCHAR(255) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  email_verified BOOLEAN NOT NULL DEFAULT FALSE,
+  image TEXT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `session` (
+  id VARCHAR(255) PRIMARY KEY,
+  expires_at TIMESTAMP NOT NULL,
+  token VARCHAR(255) NOT NULL UNIQUE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ip_address VARCHAR(255),
+  user_agent TEXT,
+  user_id VARCHAR(255) NOT NULL,
+  CONSTRAINT session_user_fk FOREIGN KEY (user_id) REFERENCES `user`(id) ON DELETE CASCADE
+);
+CREATE INDEX session_user_id_idx ON `session`(user_id);
+
+CREATE TABLE IF NOT EXISTS `account` (
+  id VARCHAR(255) PRIMARY KEY,
+  account_id VARCHAR(255) NOT NULL,
+  provider_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL,
+  access_token TEXT,
+  refresh_token TEXT,
+  id_token TEXT,
+  access_token_expires_at TIMESTAMP NULL,
+  refresh_token_expires_at TIMESTAMP NULL,
+  scope TEXT,
+  password TEXT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT account_user_fk FOREIGN KEY (user_id) REFERENCES `user`(id) ON DELETE CASCADE
+);
+CREATE INDEX account_user_id_idx ON `account`(user_id);
+
+CREATE TABLE IF NOT EXISTS `verification` (
+  id VARCHAR(255) PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  value TEXT NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE INDEX verification_identifier_idx ON `verification`(identifier);
+
+CREATE TABLE IF NOT EXISTS auctions (
+  id VARCHAR(255) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  category VARCHAR(255) NOT NULL,
+  image MEDIUMTEXT NOT NULL,
+  price INT NOT NULL,
+  bid_count INT NOT NULL DEFAULT 0,
+  increment INT NOT NULL,
+  ends_at TIMESTAMP NOT NULL,
+  tag VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  seller VARCHAR(255) NOT NULL,
+  seller_id VARCHAR(255) NULL,
+  closed_at TIMESTAMP NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT auctions_seller_fk FOREIGN KEY (seller_id) REFERENCES `user`(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS bids (
+  id CHAR(36) PRIMARY KEY,
+  auction_id VARCHAR(255) NOT NULL,
+  bidder_id VARCHAR(255) NOT NULL,
+  amount INT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT bids_auction_fk FOREIGN KEY (auction_id) REFERENCES auctions(id) ON DELETE CASCADE,
+  CONSTRAINT bids_bidder_fk FOREIGN KEY (bidder_id) REFERENCES `user`(id) ON DELETE CASCADE
+);
+CREATE INDEX bids_auction_id_idx ON bids(auction_id);
+CREATE INDEX bids_bidder_id_idx ON bids(bidder_id);
+
+CREATE TABLE IF NOT EXISTS watchlist (
+  user_id VARCHAR(255) NOT NULL,
+  auction_id VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, auction_id),
+  CONSTRAINT watchlist_user_fk FOREIGN KEY (user_id) REFERENCES `user`(id) ON DELETE CASCADE,
+  CONSTRAINT watchlist_auction_fk FOREIGN KEY (auction_id) REFERENCES auctions(id) ON DELETE CASCADE
+);

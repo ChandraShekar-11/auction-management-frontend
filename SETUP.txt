@@ -1,0 +1,18 @@
+Bidwell Auction — quick setup (Windows)
+
+1. Install Node.js 20+ and MySQL 8 (service running).
+2. Open PowerShell in this folder:
+   npm install
+   Copy-Item .env.example .env
+3. Edit .env:
+   DATABASE_URL=mysql://root:YOUR_PASSWORD@localhost:3306/bidwell
+   BETTER_AUTH_SECRET=any-random-string-at-least-32-characters
+   BETTER_AUTH_URL=http://localhost:8080
+4. Create tables:
+   npm run db:setup
+5. Run the app (keep this terminal open):
+   npm run dev
+6. Open http://localhost:8080 — Sign in → Create account (password 8+ chars).
+7. Sell an item: /sell — photos are compressed automatically before save.
+
+Optional Google OAuth: set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env.

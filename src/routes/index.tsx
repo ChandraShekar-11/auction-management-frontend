@@ -1,0 +1,3 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { AuctionBrowser } from '@/components/auction/browser';
+export const Route=createFileRoute('/')({head:()=>({meta:[{title:'Bidwell — Discover live auctions'},{name:'description',content:'Discover extraordinary items, explore live auctions and find your next great thing on Bidwell.'},{property:'og:title',content:'Bidwell — Discover live auctions'},{property:'og:description',content:'Unique finds. Live auctions. A little curiosity can lead to something extraordinary.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),component:AuctionBrowser});

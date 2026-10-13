@@ -1,0 +1,3 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { SellerWorkspace } from '@/components/auction/workspaces';
+export const Route=createFileRoute('/sell')({head:()=>({meta:[{"title": "Sell an item \u2014 Bidwell"}, {"name": "description", "content": "Create an auction for your next special find."}, {"property": "og:title", "content": "Sell an item \u2014 Bidwell"}, {"property": "og:description", "content": "Create an auction for your next special find."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary_large_image"}]}),component:SellerWorkspace});
